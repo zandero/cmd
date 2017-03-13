@@ -4,12 +4,7 @@ import com.zandero.cmd.CommandLineException;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
 
-import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Build up a single command line option
@@ -50,8 +45,7 @@ public abstract class CommandOption<T> {
 	/**
 	 * Initializes command option
 	 *
-	 * @param shortName short command name, for instance: "a"
-	 //* @param classType type of option value
+	 * @param shortName short command name, for instance: "a" //* @param classType type of option value
 	 */
 	public CommandOption(String shortName) { //, Class<T> classType) {
 
@@ -76,43 +70,6 @@ public abstract class CommandOption<T> {
 		}
 
 		clazz = classType;
-	}
-
-	public static <T> Class<T> getGenericClassParameter(final Class<?> parameterizedSubClass, final Class<?> genericSuperClass, final int pos) {
-		// a mapping from type variables to actual values (classes)
-		Map<TypeVariable<?>, Class<?>> mapping = new HashMap<>();
-
-		Class<?> klass = parameterizedSubClass;
-		while (klass != null) {
-			Type type = klass.getGenericSuperclass();
-			if (type instanceof ParameterizedType) {
-				ParameterizedType parType = (ParameterizedType) type;
-				Type rawType = parType.getRawType();
-				if (rawType == genericSuperClass) {
-					// found
-					Type t = parType.getActualTypeArguments()[pos];
-					if (t instanceof Class<?>) {
-						return (Class<T>) t;
-					} else {
-						return (Class<T>) mapping.get((TypeVariable<?>)t);
-					}
-				}
-				// resolve
-				Type[] vars = ((GenericDeclaration)(parType.getRawType())).getTypeParameters();
-				Type[] args = parType.getActualTypeArguments();
-				for (int i = 0; i < vars.length; i++) {
-					if (args[i] instanceof Class<?>) {
-						mapping.put((TypeVariable)vars[i], (Class<?>)args[i]);
-					} else {
-						mapping.put((TypeVariable)vars[i], mapping.get((TypeVariable<?>)(args[i])));
-					}
-				}
-				klass = (Class<?>) rawType;
-			} else {
-				klass = klass.getSuperclass();
-			}
-		}
-		throw new IllegalArgumentException("no generic supertype for " + parameterizedSubClass + " of type " + genericSuperClass);
 	}
 
 	/**
@@ -243,6 +200,7 @@ public abstract class CommandOption<T> {
 
 	/**
 	 * Compares against other option
+	 *
 	 * @param option to compare agains
 	 * @return true if options have same short name, long name or setting associated
 	 */
@@ -297,6 +255,7 @@ public abstract class CommandOption<T> {
 
 	/**
 	 * To be implemented by custom option
+	 *
 	 * @param argument given argument in command line
 	 * @return parsed value of argument in option type, or throws CommandLineException if can't be parsed into given type
 	 */
