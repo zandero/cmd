@@ -9,7 +9,7 @@ public class StringOption extends CommandOption<String> {
 
 	public StringOption(String name) {
 
-		super(name, String.class);
+		super(name);
 	}
 
 	@Override

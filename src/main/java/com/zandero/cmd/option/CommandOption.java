@@ -4,6 +4,13 @@ import com.zandero.cmd.CommandLineException;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
 
+import java.lang.reflect.GenericDeclaration;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Build up a single command line option
  */
@@ -44,9 +51,9 @@ public abstract class CommandOption<T> {
 	 * Initializes command option
 	 *
 	 * @param shortName short command name, for instance: "a"
-	 * @param classType type of option value
+	 //* @param classType type of option value
 	 */
-	public CommandOption(String shortName, Class<T> classType) {
+	public CommandOption(String shortName) { //, Class<T> classType) {
 
 		Assert.notNullOrEmptyTrimmed(shortName, "Missing option name!");
 		shortName = StringUtils.trim(shortName);
@@ -55,6 +62,10 @@ public abstract class CommandOption<T> {
 		Assert.isTrue(shortName.equals(compare), "Option name can not contain whitespace characters!");
 
 		command = shortName;
+
+		//
+		final ParameterizedType type = (ParameterizedType) this.getClass().getGenericSuperclass();
+		Class<T> classType = (Class<T>) type.getActualTypeArguments()[0];
 
 		if (classType == null ||
 			classType.getName().equals(void.class.getName()) || // void to indicate a default option
@@ -67,6 +78,42 @@ public abstract class CommandOption<T> {
 		clazz = classType;
 	}
 
+	public static <T> Class<T> getGenericClassParameter(final Class<?> parameterizedSubClass, final Class<?> genericSuperClass, final int pos) {
+		// a mapping from type variables to actual values (classes)
+		Map<TypeVariable<?>, Class<?>> mapping = new HashMap<>();
+
+		Class<?> klass = parameterizedSubClass;
+		while (klass != null) {
+			Type type = klass.getGenericSuperclass();
+			if (type instanceof ParameterizedType) {
+				ParameterizedType parType = (ParameterizedType) type;
+				Type rawType = parType.getRawType();
+				if (rawType == genericSuperClass) {
+					// found
+					Type t = parType.getActualTypeArguments()[pos];
+					if (t instanceof Class<?>) {
+						return (Class<T>) t;
+					} else {
+						return (Class<T>) mapping.get((TypeVariable<?>)t);
+					}
+				}
+				// resolve
+				Type[] vars = ((GenericDeclaration)(parType.getRawType())).getTypeParameters();
+				Type[] args = parType.getActualTypeArguments();
+				for (int i = 0; i < vars.length; i++) {
+					if (args[i] instanceof Class<?>) {
+						mapping.put((TypeVariable)vars[i], (Class<?>)args[i]);
+					} else {
+						mapping.put((TypeVariable)vars[i], mapping.get((TypeVariable<?>)(args[i])));
+					}
+				}
+				klass = (Class<?>) rawType;
+			} else {
+				klass = klass.getSuperclass();
+			}
+		}
+		throw new IllegalArgumentException("no generic supertype for " + parameterizedSubClass + " of type " + genericSuperClass);
+	}
 
 	/**
 	 * Sets long command name
@@ -74,7 +121,7 @@ public abstract class CommandOption<T> {
 	 * @param longName long name, for instance: "all"
 	 * @return command option
 	 */
-	public CommandOption longCommand(String longName) {
+	public CommandOption<T> longCommand(String longName) {
 
 		Assert.notNullOrEmptyTrimmed(longName, "Missing long name!");
 
@@ -95,7 +142,7 @@ public abstract class CommandOption<T> {
 	 * @param name of setting key
 	 * @return command option
 	 */
-	public CommandOption setting(String name) {
+	public CommandOption<T> setting(String name) {
 
 		Assert.notNullOrEmptyTrimmed(name, "Missing setting name");
 
@@ -113,7 +160,7 @@ public abstract class CommandOption<T> {
 	 * @param text description
 	 * @return command option
 	 */
-	public CommandOption description(String text) {
+	public CommandOption<T> description(String text) {
 
 		description = StringUtils.trimToNull(text);
 		return this;

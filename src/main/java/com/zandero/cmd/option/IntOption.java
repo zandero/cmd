@@ -19,7 +19,7 @@ public class IntOption extends CommandOption<Integer> {
 	 */
 	public IntOption(String shortName) {
 
-		super(shortName, Integer.class);
+		super(shortName);
 	}
 
 	@Override

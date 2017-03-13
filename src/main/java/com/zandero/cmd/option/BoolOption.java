@@ -30,7 +30,7 @@ public class BoolOption extends CommandOption<Boolean> {
 
 	public BoolOption(String name) {
 
-		super(name, Boolean.class);
+		super(name);
 	}
 
 	@Override
