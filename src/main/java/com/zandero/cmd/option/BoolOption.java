@@ -5,7 +5,7 @@ import com.zandero.utils.StringUtils;
 import java.util.HashMap;
 
 /**
- *
+ * Boolean option with null value if desired
  */
 public class BoolOption extends CommandOption<Boolean> {
 
@@ -26,11 +26,16 @@ public class BoolOption extends CommandOption<Boolean> {
 		valueMap.put("no", false);
 		valueMap.put("n", false);
 		valueMap.put("off", false);
+
+		valueMap.put("null", null);
+		valueMap.put("nil", null);
+		valueMap.put("nul", null);
 	}
 
 	public BoolOption(String name) {
 
 		super(name);
+		super.setDefault(false); // by default boolean options are false
 	}
 
 	@Override
@@ -49,8 +54,12 @@ public class BoolOption extends CommandOption<Boolean> {
 		return valueMap.get(argument);
 	}
 
-	@Override
-	public Boolean getDefault() {
-		return false;
+	/**
+	 * Will invert default to true, when option given value is false
+	 * @return inverted BoolOption
+	 */
+	public BoolOption invert() {
+		setDefault(!getDefault());
+		return this;
 	}
 }

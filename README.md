@@ -1,6 +1,16 @@
 # command line parser
-Command line parsing utility  
+Command line parsing utility, that converts a given command line to a name, value `Map`  
  
+## Example
+`java -jar MyApp.jar -t 10 -p raw`
+
+
+Will produce a setting map:
+```java
+Map<String, Object> settings = new HashMap<>();
+settings.put("t", 10);
+settings.put("p", "raw");`
+```
 
 ## Setup
 ```xml

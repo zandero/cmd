@@ -4,7 +4,7 @@ import com.zandero.cmd.CommandLineException;
 import com.zandero.utils.StringUtils;
 
 /**
- * Integer option
+ * Integer option (with min, max range if desired)
  */
 public class IntOption extends CommandOption<Integer> {
 

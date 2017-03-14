@@ -45,9 +45,9 @@ public abstract class CommandOption<T> {
 	/**
 	 * Initializes command option
 	 *
-	 * @param shortName short command name, for instance: "a" //* @param classType type of option value
+	 * @param shortName short command name, for instance: "a"
 	 */
-	public CommandOption(String shortName) { //, Class<T> classType) {
+	public CommandOption(String shortName) {
 
 		Assert.notNullOrEmptyTrimmed(shortName, "Missing option name!");
 		shortName = StringUtils.trim(shortName);
@@ -57,19 +57,9 @@ public abstract class CommandOption<T> {
 
 		command = shortName;
 
-		//
+		// find out generic class type given in derived class
 		final ParameterizedType type = (ParameterizedType) this.getClass().getGenericSuperclass();
-		Class<T> classType = (Class<T>) type.getActualTypeArguments()[0];
-
-		if (classType == null ||
-			classType.getName().equals(void.class.getName()) || // void to indicate a default option
-			classType.getName().equals(Void.class.getName()) ||
-			classType.getName().equals(boolean.class.getName()) || // boolean are optional by default ... if not given they default to false
-			classType.getName().equals(Boolean.class.getName())) {
-			classType = null; // has argument = false
-		}
-
-		clazz = classType;
+		clazz = (Class<T>) type.getActualTypeArguments()[0];
 	}
 
 	/**
@@ -187,7 +177,7 @@ public abstract class CommandOption<T> {
 	 */
 	public boolean hasArguments() {
 
-		return clazz != null && !clazz.isInstance(Void.class);
+		return clazz != null && clazz != Void.class && clazz != Boolean.class;
 	}
 
 	/**
@@ -210,9 +200,9 @@ public abstract class CommandOption<T> {
 			return false;
 		}
 
-		return StringUtils.equals(command, option.command)
-			|| StringUtils.equals(longCommand, option.longCommand)
-			|| StringUtils.equals(setting, option.setting);
+		return StringUtils.equals(getCommand(), option.getCommand())
+			|| StringUtils.equals(getLongCommand(), option.getLongCommand())
+			|| StringUtils.equals(getSetting(), option.getSetting());
 	}
 
 	/**
@@ -225,7 +215,7 @@ public abstract class CommandOption<T> {
 			return false;
 		}
 
-		return argument.equals("-" + command) || argument.equals(command); // compare both "-a" and "a"
+		return argument.equals("-" + getCommand()) || argument.equals(getCommand()); // compare both "-a" and "a"
 	}
 
 	/**
@@ -238,16 +228,16 @@ public abstract class CommandOption<T> {
 			return false;
 		}
 
-		return argument.equals("--" + longCommand) || argument.equals(longCommand); // compare both "--long" and "long"
+		return argument.equals("--" + getLongCommand()) || argument.equals(getLongCommand()); // compare both "--long" and "long"
 	}
 
 	@Override
 	public String toString() {
 
-		String out = "[-" + command + " " + (longCommand == null ? "" : longCommand) + "]";
+		String out = "[-" + getCommand() + " " + (getLongCommand() == null ? "" : getLongCommand()) + "]";
 
-		if (description != null) {
-			out = out + " " + description;
+		if (getDescription() != null) {
+			out = out + " " + getDescription();
 		}
 
 		return out;

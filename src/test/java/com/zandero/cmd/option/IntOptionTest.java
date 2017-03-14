@@ -11,7 +11,15 @@ import static org.junit.Assert.*;
 public class IntOptionTest {
 
 	@Test
-	public void IntegerOptionTest() throws CommandLineException {
+	public void intOptionTest() {
+		CommandOption option = new IntOption("i");
+
+		assertTrue(option.hasArguments());
+		assertNull(option.getDefault());
+	}
+
+	@Test
+	public void intOptionMinMaxTest() throws CommandLineException {
 
 		CommandOption option = new IntOption("n")
 			.min(10)
@@ -33,5 +41,21 @@ public class IntOptionTest {
 		assertEquals(1, option.getDefault());
 
 		assertEquals(14, option.parse("14"));
+
+		try {
+			option.parse("21");
+			assertFalse("Should not come here!", true);
+		}
+		catch (CommandLineException e) {
+			assertEquals("Maximal allowed value for n, is 20!", e.getMessage());
+		}
+
+		try {
+			option.parse("9");
+			assertFalse("Should not come here!", true);
+		}
+		catch (CommandLineException e) {
+			assertEquals("Minimal allowed value for n, is 10!", e.getMessage());
+		}
 	}
 }

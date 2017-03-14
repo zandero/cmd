@@ -1,7 +1,7 @@
 package com.zandero.cmd.option;
 
 /**
- *
+ * Placeholder option
  */
 public class VoidOption extends CommandOption<Void> {
 

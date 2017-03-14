@@ -3,6 +3,7 @@ package com.zandero.cmd;
 import com.zandero.cmd.option.CommandOption;
 import com.zandero.settings.Settings;
 import com.zandero.utils.Assert;
+import com.zandero.utils.StringUtils;
 
 import java.util.List;
 
@@ -58,46 +59,48 @@ public class CommandLineParser {
 		if (arguments != null) {
 
 			// each argument is either a option or a option value
-			boolean findOption = true; // we start with options search
 			CommandOption option = null;
 
 			for (String argument : arguments) {
 
-				if (findOption) { // get option
+				if (isOption(argument)) { // is this an option or an argument ... ?
+
 					option = findOption(argument);
 
 					if (option != null && !option.hasArguments()) {
-						// this is a no arg option ... add it to list
+						// this is a no arg option ... add it to list (we might override this in the next step)
 						out.put(option.getSetting(), option.parse(argument));
 					}
-				}
-				else {  // get value (if needed)
-					Object value = option.parse(argument);
-
-					out.put(option.getSetting(), value);
-					findOption = true; // switch back to option search
+					continue;
 				}
 
 				if (option == null) {
 					throw new CommandLineException("Unknown command line option: " + argument);
 				}
 
-				if (option.hasArguments()) { // next argument will be the value
-					findOption = false;
-				}
+				Object value = option.parse(argument);
+				out.put(option.getSetting(), value);
 			}
 		}
 
 		// add default options if any
-		for (CommandOption option: builder.get()) {
-			Object defaultValue = option.getDefault();
+		for (CommandOption option : builder.get()) {
 
-			if (defaultValue != null && !out.containsKey(option.getSetting())) {
-				out.put(option.getSetting(), defaultValue);
+			if (!out.containsKey(option.getSetting())) {
+				out.put(option.getSetting(), option.getDefault());
 			}
 		}
 
 		return out;
+	}
+
+	private boolean isOption(String argument) {
+
+		if (StringUtils.isNullOrEmptyTrimmed(argument)) {
+			return false;
+		}
+
+		return argument.startsWith("-") || argument.startsWith("--");
 	}
 
 	/**

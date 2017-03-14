@@ -3,7 +3,7 @@ package com.zandero.cmd.option;
 import com.zandero.utils.StringUtils;
 
 /**
- * String based options
+ * String option
  */
 public class StringOption extends CommandOption<String> {
 
