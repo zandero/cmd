@@ -178,6 +178,10 @@ public abstract class CommandOption<T> {
 	 */
 	public String getDescription() {
 
+		if (description == null) {
+			return "";
+		}
+
 		return description;
 	}
 
@@ -248,12 +252,22 @@ public abstract class CommandOption<T> {
 		return argument.equals("--" + getLongCommand()) || argument.equals(getLongCommand()); // compare both "--long" and "long"
 	}
 
+	public String toCommandString() {
+
+		String out = "-" + getCommand();
+		if (longCommand == null) {
+			return out;
+		}
+
+		return out + " [ --" + getLongCommand() + " ]";
+	}
+
 	@Override
 	public String toString() {
 
-		String out = "[-" + getCommand() + (getLongCommand() == null ? "" : " " + getLongCommand()) + "]";
+		String out = toCommandString();
 
-		if (getDescription() != null) {
+		if (description != null) {
 			out = out + " " + getDescription();
 		}
 

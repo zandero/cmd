@@ -172,4 +172,35 @@ public class CommandBuilder {
 
 		return null;
 	}
+
+	/**
+	 * Outputs command line options for System.out display
+	 * @return list of options as strings
+	 */
+	public List<String> getHelp() {
+
+		List<String> out = new ArrayList<>();
+
+		// TODO: add version, usage .. etc strings
+
+		// find longest option to format all other options by this one
+		int max = 0;
+		for (CommandOption option: options) {
+			String command = option.toCommandString();
+			max = Math.max(max, command.length());
+		}
+
+		for (CommandOption option: options) {
+			String info = option.toCommandString();
+			int spaces = max - info.length() + 1;
+
+			String delimiter = new String(new char[spaces]).replace("\0", " "); // returns spaces long empty string
+
+			info = info + delimiter + option.getDescription();
+			out.add(info);
+		}
+
+		return out;
+
+	}
 }
