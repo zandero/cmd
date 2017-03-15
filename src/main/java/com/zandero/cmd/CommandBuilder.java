@@ -1,6 +1,5 @@
 package com.zandero.cmd;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.zandero.cmd.option.CommandOption;
 import com.zandero.cmd.option.ConfigFileOption;
 import com.zandero.settings.Settings;
@@ -68,6 +67,7 @@ public class CommandBuilder {
 
 	/**
 	 * Find option by short name
+	 *
 	 * @param argument short name
 	 * @return found option or null if none found
 	 */
@@ -81,6 +81,7 @@ public class CommandBuilder {
 
 	/**
 	 * Finds option by long name
+	 *
 	 * @param argument long name
 	 * @return found option or null if none found
 	 */
@@ -94,6 +95,7 @@ public class CommandBuilder {
 
 	/**
 	 * Finds option by setting
+	 *
 	 * @param key setting name
 	 * @return found option or null if none found
 	 */
@@ -136,9 +138,10 @@ public class CommandBuilder {
 	 *
 	 * @param defaultSettings to be set
 	 */
-	public void setDefaults(Settings defaultSettings) {
+	void setDefaults(Settings defaultSettings) {
 
 		Assert.notNull(defaultSettings, "Missing default settings!");
+
 		for (String key : defaultSettings.keySet()) {
 
 			CommandOption<?> option = findBySetting(key);
@@ -156,6 +159,7 @@ public class CommandBuilder {
 
 	/**
 	 * Gets config file option if present in list
+	 *
 	 * @return config file option or null if not configured
 	 */
 	CommandOption getConfigFileOption() {

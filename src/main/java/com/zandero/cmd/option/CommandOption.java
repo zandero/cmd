@@ -251,7 +251,7 @@ public abstract class CommandOption<T> {
 	@Override
 	public String toString() {
 
-		String out = "[-" + getCommand() + " " + (getLongCommand() == null ? "" : getLongCommand()) + "]";
+		String out = "[-" + getCommand() + (getLongCommand() == null ? "" : " " + getLongCommand()) + "]";
 
 		if (getDescription() != null) {
 			out = out + " " + getDescription();

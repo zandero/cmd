@@ -8,10 +8,9 @@ import com.zandero.settings.Settings;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -127,5 +126,69 @@ public class CommandLineParserTest {
 		assertEquals(false, out.get("a"));
 		assertEquals(100, out.get("s"));
 		assertEquals("some.file", out.get("f"));
+	}
+
+	@Test
+	public void commandLineParserFromOptions() throws CommandLineException {
+
+		CommandOption option = new BoolOption("a").longCommand("all");
+		List<CommandOption> list = new ArrayList<>();
+		list.add(option);
+
+		// create parser
+		CommandLineParser parser = new CommandLineParser(list);
+
+		Settings output = parser.parse(null);
+		assertFalse(output.getBool("a"));
+
+		output = parser.parse(new String[]{"-a"});
+		assertTrue(output.getBool("a"));
+	}
+
+	@Test
+	public void setDefaultsTest() throws CommandLineException {
+
+		CommandOption option = new BoolOption("a")
+			.longCommand("all");
+
+		CommandBuilder builder = new CommandBuilder();
+		builder.add(option);
+
+		Settings settings = new Settings();
+		settings.put("a", true);
+
+		CommandLineParser parser = new CommandLineParser(builder);
+		parser.setDefaults(settings);
+
+		Settings out = parser.parse(null);
+		assertTrue(out.getBool("a"));
+	}
+
+	@Test
+	public void setDefaultsSettingsTest() throws CommandLineException {
+
+		CommandOption option = new BoolOption("a")
+			.longCommand("all")
+			.setting("ALL");
+
+		CommandBuilder builder = new CommandBuilder();
+		builder.add(option);
+
+		// 1st will this time not found as we have a setting defined
+		Settings settings = new Settings();
+		settings.put("a", true);
+
+		CommandLineParser parser = new CommandLineParser(builder);
+		parser.setDefaults(settings);
+
+		Settings out = parser.parse(null);
+		assertFalse(out.getBool("ALL"));
+
+		// 2nd will find by setting name
+		settings.put("ALL", true);
+		parser.setDefaults(settings);
+
+		out = parser.parse(null);
+		assertTrue(out.getBool("ALL"));
 	}
 }

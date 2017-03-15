@@ -49,6 +49,9 @@ public class BoolOptionTest {
 		assertFalse((boolean)option.parse("off"));
 		assertFalse((boolean)option.parse("0"));
 
+		assertNull(option.parse(""));
+		assertNull(option.parse(" "));
+		assertNull(option.parse(null));
 		assertNull(option.parse("null"));
 		assertNull(option.parse("NULL"));
 		assertNull(option.parse("nil"));
