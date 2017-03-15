@@ -58,8 +58,25 @@ public abstract class CommandOption<T> {
 		command = shortName;
 
 		// find out generic class type given in derived class
-		final ParameterizedType type = (ParameterizedType) this.getClass().getGenericSuperclass();
-		clazz = (Class<T>) type.getActualTypeArguments()[0];
+		clazz = getParametrizedType(this.getClass());
+	}
+
+	private Class<T> getParametrizedType(Class<?> clazz) {
+
+		try {
+
+			ParameterizedType type = (ParameterizedType) clazz.getGenericSuperclass();
+			return (Class<T>) type.getActualTypeArguments()[0];
+		}
+		catch (ClassCastException e) {
+
+			clazz = clazz.getSuperclass();
+			if (clazz != null) {
+				return getParametrizedType(clazz);
+			}
+		}
+
+		return null;
 	}
 
 	/**

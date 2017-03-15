@@ -1,10 +1,12 @@
 package com.zandero.cmd;
 
 import com.zandero.cmd.option.CommandOption;
+import com.zandero.cmd.option.ConfigFileOption;
 import com.zandero.settings.Settings;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,10 +85,32 @@ public class CommandLineParser {
 			}
 		}
 
-		// add default options if any
-		for (CommandOption option : builder.get()) {
+		// check if ConfigFileOption is provided and given
+		CommandOption config = builder.getConfigFileOption();
 
-			if (!out.containsKey(option.getSetting())) {
+		// create copy of builder to override defaults if needed
+		CommandBuilder defaults = new CommandBuilder(builder.get());
+
+		if (config != null) {
+
+			String file = (String) out.get(config.getSetting()); // is provided?
+			if (file != null) {
+				ConfigReader reader = new ConfigReader();
+				Settings configSettings = reader.load(file, builder);
+
+				// override default with read config
+				defaults.setDefaults(configSettings);
+
+				// remove config setting from output
+				out.remove(config.getSetting());
+			}
+		}
+
+		// add default options if any
+		for (CommandOption option : defaults.get()) {
+
+			if (!(option instanceof ConfigFileOption) &&
+				!out.containsKey(option.getSetting())) {
 				out.put(option.getSetting(), option.getDefault());
 			}
 		}
