@@ -85,12 +85,12 @@ public class CommandOptionTest {
 	public void toStringTest() {
 
 		CommandOption option = new StringOption("v");
-		assertEquals("[-v]", option.toString());
+		assertEquals("-v", option.toString());
 
 		option.longCommand("valid");
-		assertEquals("[-v valid]", option.toString());
+		assertEquals("-v [ --valid ]", option.toString());
 
 		option.description("This is a test option");
-		assertEquals("[-v valid] This is a test option", option.toString());
+		assertEquals("-v [ --valid ] This is a test option", option.toString());
 	}
 }

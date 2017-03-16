@@ -31,9 +31,9 @@ public class IntOptionTest {
 		assertEquals("name", option.getLongCommand());
 		assertEquals("user_name", option.getSetting());
 
-		assertEquals("java.lang.Integer", option.getClazz().getName());
+		assertEquals("java.lang.Integer", option.getType().getTypeName());
 
-		assertNull(option.getDescription());
+		assertEquals("", option.getDescription());
 		assertTrue(option.hasArguments());
 
 		option.setDefault(1);

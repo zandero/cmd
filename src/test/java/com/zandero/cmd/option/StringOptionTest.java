@@ -30,9 +30,9 @@ public class StringOptionTest {
 		assertEquals("name", option.getLongCommand());
 		assertEquals("user_name", option.getSetting());
 
-		assertEquals("java.lang.String", option.getClazz().getName());
+		assertEquals("java.lang.String", option.getType().getTypeName());
 
-		assertNull(option.getDescription());
+		assertEquals("", option.getDescription());
 		assertTrue(option.hasArguments());
 
 		option.setDefault("Test");

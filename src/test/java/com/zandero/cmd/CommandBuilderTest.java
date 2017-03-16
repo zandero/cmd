@@ -14,8 +14,7 @@ import static org.junit.Assert.*;
  *
  */
 public class CommandBuilderTest {
-
-
+	
 	@Test
 	public void getHelpTest() {
 

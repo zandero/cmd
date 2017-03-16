@@ -3,8 +3,10 @@ package com.zandero.cmd.option;
 import com.zandero.cmd.CommandLineException;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 /**
  * Build up a single command line option
@@ -17,15 +19,14 @@ public abstract class CommandOption<T> {
 	private final String command;
 
 	/**
+	 * Generic class type
+	 */
+	private Type type;
+
+	/**
 	 * Long command version: all
 	 */
 	private String longCommand;
-
-	/**
-	 * Expected value type of option
-	 * Void for optional types
-	 */
-	private Class<T> clazz;
 
 	/**
 	 * Description of option
@@ -43,6 +44,17 @@ public abstract class CommandOption<T> {
 	private T defaultValue = null;
 
 	/**
+	 * Initializes command option without short name
+	 * (long name must be given separately otherwise option is invalid)
+	 */
+	public CommandOption() {
+
+		// find out generic class type given in derived class
+		type = getParametrizedType(this.getClass());
+		command = null;
+	}
+
+	/**
 	 * Initializes command option
 	 *
 	 * @param shortName short command name, for instance: "a"
@@ -55,18 +67,17 @@ public abstract class CommandOption<T> {
 		String compare = StringUtils.sanitizeWhitespace(shortName);
 		Assert.isTrue(shortName.equals(compare), "Option name can not contain whitespace characters!");
 
-		command = shortName;
-
 		// find out generic class type given in derived class
-		clazz = getParametrizedType(this.getClass());
+		type = getParametrizedType(this.getClass());
+		command = shortName;
 	}
 
-	private Class<T> getParametrizedType(Class<?> clazz) {
+	private Type getParametrizedType(Class<?> clazz) {
 
 		try {
 
 			ParameterizedType type = (ParameterizedType) clazz.getGenericSuperclass();
-			return (Class<T>) type.getActualTypeArguments()[0];
+			return type.getActualTypeArguments()[0];
 		}
 		catch (ClassCastException e) {
 
@@ -142,8 +153,16 @@ public abstract class CommandOption<T> {
 			return;
 		}
 
-		if (!getClazz().isInstance(aDefault)) {
-			throw new IllegalArgumentException("Expected default setting of type: " + getClazz().getName() + ", but was provided: " + aDefault.getClass().getName());
+		boolean isCorrectType;
+		if (type instanceof ParameterizedType) {
+			isCorrectType = ((ParameterizedTypeImpl) type).getRawType().isInstance(aDefault);
+		}
+		else {
+			isCorrectType = ((Class) type).isInstance(aDefault);
+		}
+
+		if (!isCorrectType) {
+			throw new IllegalArgumentException("Expected default setting of type: " + type.getTypeName() + ", but was provided: " + aDefault.getClass().getName());
 		}
 
 		defaultValue = (T) aDefault;
@@ -188,9 +207,9 @@ public abstract class CommandOption<T> {
 	/**
 	 * @return setting value type
 	 */
-	public Class<T> getClazz() {
+	public Type getType() {
 
-		return clazz;
+		return type;
 	}
 
 	/**
@@ -198,7 +217,7 @@ public abstract class CommandOption<T> {
 	 */
 	public boolean hasArguments() {
 
-		return clazz != null && clazz != Void.class && clazz != Boolean.class;
+		return type != null && !type.equals(Void.class) && !type.equals(Boolean.class);
 	}
 
 	/**
