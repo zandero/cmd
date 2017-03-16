@@ -3,7 +3,6 @@ package com.zandero.cmd.option;
 import com.zandero.cmd.CommandLineException;
 import com.zandero.utils.Assert;
 import com.zandero.utils.StringUtils;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -155,7 +154,7 @@ public abstract class CommandOption<T> {
 
 		boolean isCorrectType;
 		if (type instanceof ParameterizedType) {
-			isCorrectType = ((ParameterizedTypeImpl) type).getRawType().isInstance(aDefault);
+			isCorrectType = ((Class) ((ParameterizedType) type).getRawType()).isInstance(aDefault);
 		}
 		else {
 			isCorrectType = ((Class) type).isInstance(aDefault);
