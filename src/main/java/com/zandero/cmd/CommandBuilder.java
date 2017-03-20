@@ -30,9 +30,8 @@ public class CommandBuilder {
 	 */
 	public CommandBuilder(List<CommandOption> commands) {
 
-		for (CommandOption option : commands) {
-			add(option);
-		}
+		Assert.notNull(commands, "Missing command option!");
+		commands.forEach(this::add);
 	}
 
 	/**
