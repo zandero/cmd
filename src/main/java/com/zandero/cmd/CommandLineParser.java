@@ -134,7 +134,7 @@ public class CommandLineParser {
 	 */
 	private CommandOption findOption(String argument) {
 
-		if ("--".equals(argument)) {
+		if ("--".equals(argument) || argument == null) {
 			return null;
 		}
 

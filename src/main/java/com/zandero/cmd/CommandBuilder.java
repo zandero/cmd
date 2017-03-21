@@ -4,6 +4,7 @@ import com.zandero.cmd.option.CommandOption;
 import com.zandero.cmd.option.ConfigFileOption;
 import com.zandero.settings.Settings;
 import com.zandero.utils.Assert;
+import com.zandero.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,10 @@ import java.util.Optional;
 public class CommandBuilder {
 
 	List<CommandOption> options = new ArrayList<>();
+
+	private String helpAppVersion;
+
+	private String helpAppExample;
 
 	/**
 	 * Creates empty builder
@@ -173,6 +178,17 @@ public class CommandBuilder {
 	}
 
 	/**
+	 * Sets app version and example to be show in help screen
+	 * @param appVersion application name and version
+	 * @param usageExample example or additional data
+	 */
+	public void setHelp(String appVersion, String usageExample) {
+
+		helpAppVersion = StringUtils.trimToNull(appVersion);
+		helpAppExample = StringUtils.trimToNull(usageExample);
+	}
+
+	/**
 	 * Outputs command line options for System.out display
 	 * @return list of options as strings
 	 */
@@ -180,7 +196,17 @@ public class CommandBuilder {
 
 		List<String> out = new ArrayList<>();
 
-		// TODO: add version, usage .. etc strings
+		if (helpAppVersion != null) {
+			out.add(helpAppVersion);
+		}
+
+		if (helpAppExample != null) {
+			out.add(helpAppExample);
+		}
+
+		if (helpAppVersion != null || helpAppExample != null) {
+	 		out.add(""); // new line
+ 		}
 
 		// find longest option to format all other options by this one
 		int max = 0;
@@ -193,7 +219,7 @@ public class CommandBuilder {
 			String info = option.toCommandString();
 			int spaces = max - info.length() + 1;
 
-			String delimiter = new String(new char[spaces]).replace("\0", " "); // returns spaces long empty string
+			String delimiter = new String(new char[spaces]).replace("\0", " "); // returns 'spaces' long empty string
 
 			info = info + delimiter + option.getDescription();
 			out.add(info);
