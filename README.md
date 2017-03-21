@@ -26,7 +26,6 @@ settings.put("p", "raw");`
 ```java
 // define command arguments
 CommandOption all = new BoolOption("a")
-	.invert()
 	.longCommand("all")
 	.setting("getAll");
 
@@ -51,7 +50,7 @@ CommandLineParser parser = new CommandLineParser(builder);
 
 ```java
 // use parser to parse input arguments
-String[] args = new String[]{"-a", "true", "--file", "/this.file", "-s", "100");
+String[] args = new String[]{"-a", "--file", "/this.file", "-s", "100");
     
 Settings out = parser.parse(args);
     
