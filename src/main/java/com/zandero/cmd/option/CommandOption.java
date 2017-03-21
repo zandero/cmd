@@ -145,11 +145,11 @@ public abstract class CommandOption<T> {
 	 *
 	 * @param aDefault value
 	 */
-	public void setDefault(Object aDefault) {
+	public CommandOption<T> setDefault(Object aDefault) {
 
 		if (aDefault == null) {
 			defaultValue = null;
-			return;
+			return this;
 		}
 
 		boolean isCorrectType;
@@ -165,6 +165,7 @@ public abstract class CommandOption<T> {
 		}
 
 		defaultValue = (T) aDefault;
+		return this;
 	}
 
 	/**
