@@ -16,9 +16,9 @@ import java.util.Scanner;
 /**
  * Loads options from a config file
  */
-public class ConfigReader {
+public class ConfigFileReader {
 
-	private static final Logger log = LoggerFactory.getLogger(ConfigReader.class);
+	private static final Logger log = LoggerFactory.getLogger(ConfigFileReader.class);
 
 	/**
 	 * Loads name value pairs directly from given file ... adding them as settings

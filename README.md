@@ -24,6 +24,39 @@ settings.put("p", "raw");`
 ## Usage
 
 ```java
+	// define command arguments
+		CommandOption all = new BoolOption("a")
+			.invert()
+			.longCommand("all")
+			.setting("getAll");
 
+		CommandOption file = new StringOption("f")
+			.longCommand("file")
+			.setting("fileName");
+
+		CommandOption size = new IntOption("s")
+			.longCommand("size")
+			.setting("fileSize");
+
+		// create builder
+		CommandBuilder builder = new CommandBuilder();
+		builder.add(all);
+		builder.add(file);
+		builder.add(size);
+
+		// create parser
+		CommandLineParser parser = new CommandLineParser(builder);
+
+```
+
+```java
+	// use parser to parse input arguments
+	String[] args = new String[]{"-a", "true", "--file", "/this.file", "-s", "100");
+    
+    Settings out = parser.parse(args);
+    
+    int size = out.get("fileSize");
+    boolean getAll = out.get("getAll");
+    Stirng fileName = out.get("fileName");
 ```
 

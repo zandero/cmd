@@ -2,20 +2,16 @@ package com.zandero.cmd;
 
 import com.zandero.cmd.option.*;
 import com.zandero.settings.Settings;
-import com.zandero.utils.ResourceUtils;
 import org.junit.Test;
 
-import java.io.File;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 
 /**
  *
  */
-public class ConfigReaderTest {
+public class ConfigFileReaderTest {
 
 	@Test
 	public void readOptionsFromFile() throws CommandLineException, URISyntaxException {

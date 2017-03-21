@@ -94,7 +94,7 @@ public class CommandLineParser {
 
 			String file = (String) out.get(config.getSetting()); // is provided?
 			if (file != null) {
-				ConfigReader reader = new ConfigReader();
+				ConfigFileReader reader = new ConfigFileReader();
 				Settings configSettings = reader.load(file, builder);
 
 				// override default with read config
