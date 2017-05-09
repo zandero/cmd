@@ -17,7 +17,7 @@ settings.put("p", "raw");`
 <dependency>      
      <groupId>com.zandero</groupId>      
      <artifactId>cmd</artifactId>      
-     <version>1.0</version>      
+     <version>1.2</version>      
 </dependency>
 ```
 
