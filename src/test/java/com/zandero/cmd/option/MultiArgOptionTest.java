@@ -27,7 +27,7 @@ public class MultiArgOptionTest {
 
 		Object compare = option.getDefault();
 		assertTrue(compare instanceof List);
-		List<String> items = (List<String>)compare;
+		List<String> items = (List<String>) compare;
 		assertEquals(3, items.size());
 		assertEquals("a", items.get(0));
 		assertEquals("b", items.get(1));

@@ -12,6 +12,7 @@ public class IntOptionTest {
 
 	@Test
 	public void intOptionTest() {
+
 		CommandOption option = new IntOption("i");
 
 		assertTrue(option.hasArguments());

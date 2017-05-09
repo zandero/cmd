@@ -1,7 +1,7 @@
 package com.zandero.cmd.option;
 
 import com.zandero.cmd.CommandLineException;
-import com.zandero.utils.UrlUtils;
+import com.zandero.utils.extra.ValidatingUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +19,7 @@ public class UrlOption extends CommandOption<URI> {
 	@Override
 	public URI parse(String argument) throws CommandLineException {
 
-		if (!UrlUtils.isUrl(argument)) {
+		if (!ValidatingUtils.isUrl(argument)) {
 			throw new CommandLineException("URL expected for " + getCommand() + ", but: '" + argument + "', was given!");
 		}
 
