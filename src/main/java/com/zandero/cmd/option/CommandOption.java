@@ -145,7 +145,7 @@ public abstract class CommandOption<T> {
 	 *
 	 * @param aDefault value
 	 */
-	public CommandOption<T> setDefault(Object aDefault) {
+	public CommandOption<T> defautlTo(Object aDefault) {
 
 		if (aDefault == null) {
 			defaultValue = null;

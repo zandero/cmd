@@ -35,7 +35,7 @@ public class StringOptionTest {
 		assertEquals("", option.getDescription());
 		assertTrue(option.hasArguments());
 
-		option.setDefault("Test");
+		option.defautlTo("Test");
 
 		assertEquals("Test", option.getDefault());
 	}

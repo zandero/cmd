@@ -2,11 +2,11 @@ package com.zandero.cmd.option;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -23,7 +23,7 @@ public class MultiArgOptionTest {
 		assertTrue(option.hasArguments());
 
 		List<String> defaults = Arrays.asList("a", "b", "c");
-		option.setDefault(defaults);
+		option.defautlTo(defaults);
 
 		Object compare = option.getDefault();
 		assertTrue(compare instanceof List);

@@ -156,7 +156,7 @@ public class CommandBuilder {
 			}
 
 			Object value = defaultSettings.get(key);
-			option.setDefault(value);
+			option.defautlTo(value);
 		}
 
 	}

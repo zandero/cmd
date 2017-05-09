@@ -36,7 +36,7 @@ public class IntOptionTest {
 		assertEquals("", option.getDescription());
 		assertTrue(option.hasArguments());
 
-		option.setDefault(1);
+		option.defautlTo(1);
 
 		assertEquals(1, option.getDefault());
 

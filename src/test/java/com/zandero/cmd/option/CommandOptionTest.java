@@ -57,14 +57,14 @@ public class CommandOptionTest {
 	public void setDefaultTest() {
 
 		CommandOption option = new StringOption("v");
-		option.setDefault("helo");
+		option.defautlTo("helo");
 
 		assertEquals("helo", option.getDefault());
 
-		option.setDefault(" helo ");
+		option.defautlTo(" helo ");
 		assertEquals(" helo ", option.getDefault());
 
-		option.setDefault(null);
+		option.defautlTo(null);
 		assertNull(option.getDefault());
 	}
 
@@ -73,7 +73,7 @@ public class CommandOptionTest {
 
 		try {
 			CommandOption option = new StringOption("v");
-			option.setDefault(1);
+			option.defautlTo(1);
 		}
 		catch (IllegalArgumentException e) {
 			assertEquals("Expected default setting of type: java.lang.String, but was provided: java.lang.Integer", e.getMessage());
