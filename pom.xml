@@ -47,11 +47,13 @@
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 
         <version.logback>[1.1.7,)</version.logback>
+        <version.zandero.utils>[1.2,)</version.zandero.utils>
+        <version.zandero.utils.extra>[1.2,)</version.zandero.utils.extra>
+        <version.zandero.settings>[1.2,)</version.zandero.settings>
 
         <version.trajano>[2.1.0,)</version.trajano>
         <version.junit>[4.12,)</version.junit>
         <version.mockito-all>[1.10.19,)</version.mockito-all>
-
     </properties>
 
     <dependencies>
@@ -59,19 +61,19 @@
         <dependency>
             <groupId>com.zandero</groupId>
             <artifactId>utils</artifactId>
-            <version>[1.2,)</version>
+            <version>${version.zandero.utils}</version>
         </dependency>
 
         <dependency>
             <groupId>com.zandero</groupId>
             <artifactId>utils.extra</artifactId>
-            <version>[1.2,)</version>
+            <version>${version.zandero.utils.extra}</version>
         </dependency>
 
          <dependency>
             <groupId>com.zandero</groupId>
             <artifactId>settings</artifactId>
-            <version>[1.2,)</version>
+            <version>${version.zandero.settings}</version>
         </dependency>
 
         <!-- LOGGER -->
