@@ -23,7 +23,7 @@ public class MultiArgOptionTest {
 		assertTrue(option.hasArguments());
 
 		List<String> defaults = Arrays.asList("a", "b", "c");
-		option.defautlTo(defaults);
+		option.defaultsTo(defaults);
 
 		Object compare = option.getDefault();
 		assertTrue(compare instanceof List);

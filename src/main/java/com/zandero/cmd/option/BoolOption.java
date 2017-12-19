@@ -35,7 +35,7 @@ public class BoolOption extends CommandOption<Boolean> {
 	public BoolOption(String name) {
 
 		super(name);
-		super.defautlTo(false); // by default boolean options are false
+		super.defaultsTo(false); // by default boolean options are false
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class BoolOption extends CommandOption<Boolean> {
 	 * @return inverted BoolOption
 	 */
 	public BoolOption invert() {
-		defautlTo(!getDefault());
+		defaultsTo(!getDefault());
 		return this;
 	}
 }
