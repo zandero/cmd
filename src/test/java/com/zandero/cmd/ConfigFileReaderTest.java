@@ -4,8 +4,6 @@ import com.zandero.cmd.option.*;
 import com.zandero.settings.Settings;
 import org.junit.Test;
 
-import java.net.URISyntaxException;
-
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -14,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class ConfigFileReaderTest {
 
 	@Test
-	public void readOptionsFromFile() throws CommandLineException, URISyntaxException {
+	public void readOptionsFromFile() throws CommandLineException {
 
 		// build commands
 		CommandOption all = new BoolOption("a")
