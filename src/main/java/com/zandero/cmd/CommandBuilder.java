@@ -15,7 +15,7 @@ import java.util.Optional;
  */
 public class CommandBuilder {
 
-	List<CommandOption> options = new ArrayList<>();
+	List<CommandOption<?>> options = new ArrayList<>();
 
 	private String helpAppVersion;
 
@@ -33,7 +33,7 @@ public class CommandBuilder {
 	 *
 	 * @param commands options to add
 	 */
-	public CommandBuilder(List<CommandOption> commands) {
+	public CommandBuilder(List<CommandOption<?>> commands) {
 
 		Assert.notNull(commands, "Missing command option!");
 		commands.forEach(this::add);
@@ -45,11 +45,11 @@ public class CommandBuilder {
 	 * @param option to be added
 	 * @throws IllegalArgumentException in case option overlaps with existing options by name, long name or setting
 	 */
-	public void add(CommandOption option) {
+	public void add(CommandOption<?> option) {
 
 		Assert.notNull(option, "Missing command line option");
 
-		CommandOption found = find(option);
+		CommandOption<?> found = find(option);
 		Assert.isNull(found, "Given option: " + option + " overlaps with: " + found);
 
 		options.add(option);
@@ -61,11 +61,11 @@ public class CommandBuilder {
 	 * @param option to provide info
 	 * @return found option or null if none found
 	 */
-	private CommandOption find(CommandOption option) {
+	private CommandOption<?> find(CommandOption<?> option) {
 
 		Assert.notNull(option, "Missing option!");
 
-		Optional<CommandOption> found = options.stream().filter(o -> o.is(option)).findFirst();
+		Optional<CommandOption<?>> found = options.stream().filter(o -> o.is(option)).findFirst();
 		return found.orElse(null);
 	}
 
@@ -75,11 +75,11 @@ public class CommandBuilder {
 	 * @param argument short name
 	 * @return found option or null if none found
 	 */
-	public CommandOption findShort(String argument) {
+	public CommandOption<?> findShort(String argument) {
 
 		Assert.notNullOrEmptyTrimmed(argument, "Missing short name!");
 
-		Optional<CommandOption> found = options.stream().filter(o -> o.isShort(argument)).findFirst();
+		Optional<CommandOption<?>> found = options.stream().filter(o -> o.isShort(argument)).findFirst();
 		return found.orElse(null);
 	}
 
@@ -89,11 +89,11 @@ public class CommandBuilder {
 	 * @param argument long name
 	 * @return found option or null if none found
 	 */
-	public CommandOption findLong(String argument) {
+	public CommandOption<?> findLong(String argument) {
 
 		Assert.notNullOrEmptyTrimmed(argument, "Missing long name!");
 
-		Optional<CommandOption> found = options.stream().filter(o -> o.isLong(argument)).findFirst();
+		Optional<CommandOption<?>> found = options.stream().filter(o -> o.isLong(argument)).findFirst();
 		return found.orElse(null);
 	}
 
@@ -107,7 +107,7 @@ public class CommandBuilder {
 
 		Assert.notNullOrEmptyTrimmed(key, "Missing setting key!");
 
-		Optional<CommandOption> found = options.stream().filter(o -> o.getSetting().equals(key)).findFirst();
+		Optional<CommandOption<?>> found = options.stream().filter(o -> o.getSetting().equals(key)).findFirst();
 		return found.orElse(null);
 	}
 
@@ -117,11 +117,11 @@ public class CommandBuilder {
 	 * @param name to search for
 	 * @return found option or null if none found
 	 */
-	public CommandOption findOption(String name) {
+	public CommandOption<?> findOption(String name) {
 
 		Assert.notNullOrEmptyTrimmed(name, "Missing name!");
 
-		Optional<CommandOption> found = options.stream().filter(o ->
+		Optional<CommandOption<?>> found = options.stream().filter(o ->
 			o.getSetting().equals(name) ||
 				o.isShort(name) ||
 				o.isLong(name)).findFirst();
@@ -132,7 +132,7 @@ public class CommandBuilder {
 	/**
 	 * @return list of stored options
 	 */
-	List<CommandOption> get() {
+	List<CommandOption<?>> get() {
 
 		return options;
 	}
@@ -166,9 +166,9 @@ public class CommandBuilder {
 	 *
 	 * @return config file option or null if not configured
 	 */
-	CommandOption getConfigFileOption() {
+	CommandOption<?> getConfigFileOption() {
 
-		for (CommandOption option : options) {
+		for (CommandOption<?> option : options) {
 			if (option instanceof ConfigFileOption) {
 				return option;
 			}
@@ -210,12 +210,12 @@ public class CommandBuilder {
 
 		// find longest option to format all other options by this one
 		int max = 0;
-		for (CommandOption option: options) {
+		for (CommandOption<?> option: options) {
 			String command = option.toCommandString();
 			max = Math.max(max, command.length());
 		}
 
-		for (CommandOption option: options) {
+		for (CommandOption<?> option: options) {
 			String info = option.toCommandString();
 			int spaces = max - info.length() + 1;
 
@@ -226,6 +226,20 @@ public class CommandBuilder {
 		}
 
 		return out;
+	}
 
+	/**
+	 * @param command argument / parameter
+	 * @return help for specific command, or empty list if none found
+	 */
+	public List<String> getHelpFor(String command) {
+		command = StringUtils.trimAll(command, "-");
+		for (CommandOption<?> option: options) {
+			if (option.isLong(command) || option.isShort(command)) {
+				return option.getHelp();
+			}
+		}
+
+		return new ArrayList<>();
 	}
 }

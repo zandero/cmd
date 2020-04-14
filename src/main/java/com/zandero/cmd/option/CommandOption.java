@@ -6,6 +6,8 @@ import com.zandero.utils.StringUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Build up a single command line option
@@ -41,6 +43,16 @@ public abstract class CommandOption<T> {
 	 * Default option value if any
 	 */
 	private T defaultValue = null;
+
+	/**
+	 * Is option required (mandatory)
+	 */
+	private boolean required = false;
+
+	/**
+	 * List of messages to display as help
+	 */
+	private List<String> help = new ArrayList<>();
 
 	/**
 	 * Initializes command option without short name
@@ -168,6 +180,17 @@ public abstract class CommandOption<T> {
 		return this;
 	}
 
+	public CommandOption<T> required() {
+		required = true;
+		return this;
+	}
+
+	public CommandOption<T> help(List<String> text) {
+		Assert.notNullOrEmpty(text, "Missing help text for: " + this.command);
+		help = text;
+		return this;
+	}
+
 	/**
 	 * @return option default value used when option is not provided
 	 */
@@ -220,6 +243,10 @@ public abstract class CommandOption<T> {
 		return type != null && !type.equals(Void.class) && !type.equals(Boolean.class);
 	}
 
+	public boolean isRequired() {
+		return required;
+	}
+
 	/**
 	 * @return setting name option is associated with
 	 */
@@ -228,13 +255,24 @@ public abstract class CommandOption<T> {
 		return setting == null ? command : setting;
 	}
 
+	public List<String> getHelp() {
+
+		List<String> out = new ArrayList<>();
+		out.add(toCommandString());
+		out.add("");
+		for (String item : help) {
+			out.add("   " + item);
+		}
+		return out;
+	}
+
 	/**
 	 * Compares against other option
 	 *
 	 * @param option to compare agains
 	 * @return true if options have same short name, long name or setting associated
 	 */
-	public boolean is(CommandOption option) {
+	public boolean is(CommandOption<?> option) {
 
 		if (option == null) {
 			return false;

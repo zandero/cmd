@@ -2,9 +2,9 @@ package com.zandero.cmd;
 
 import com.zandero.cmd.option.*;
 import com.zandero.settings.Settings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -15,17 +15,17 @@ public class ConfigFileReaderTest {
 	public void readOptionsFromFile() throws CommandLineException {
 
 		// build commands
-		CommandOption all = new BoolOption("a")
+		CommandOption<?> all = new BoolOption("a")
 			.invert()
 			.longCommand("all");
 
-		CommandOption file = new StringOption("f")
+		CommandOption<?> file = new StringOption("f")
 			.longCommand("file");
 
-		CommandOption size = new IntOption("s")
+		CommandOption<?> size = new IntOption("s")
 			.longCommand("size");
 
-		CommandOption config = new ConfigFileOption("c")
+		CommandOption<?> config = new ConfigFileOption("c")
 			.longCommand("config");
 
 		// create builder

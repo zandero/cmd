@@ -1,10 +1,10 @@
 package com.zandero.cmd.option;
 
 import com.zandero.cmd.CommandLineException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
@@ -12,9 +12,9 @@ import static org.junit.Assert.assertNull;
 public class VoidOptionTest {
 
 	@Test
-	public void VoidOptionTest() throws CommandLineException {
+	public void VoidOption() throws CommandLineException {
 
-		CommandOption option = new VoidOption("v");
+		CommandOption<Void> option = new VoidOption("v");
 		assertFalse(option.hasArguments());
 		assertNull(option.getDefault());
 

@@ -20,7 +20,7 @@ public class CommandLineParser {
 	 *
 	 * @param options definition of provided command line arguments
 	 */
-	public CommandLineParser(List<CommandOption> options) {
+	public CommandLineParser(List<CommandOption<?>> options) {
 
 		this(new CommandBuilder(options));
 	}
@@ -60,7 +60,7 @@ public class CommandLineParser {
 		if (arguments != null) {
 
 			// each argument is either a option or a option value
-			CommandOption option = null;
+			CommandOption<?> option = null;
 
 			for (String argument : arguments) {
 
@@ -85,7 +85,7 @@ public class CommandLineParser {
 		}
 
 		// check if ConfigFileOption is provided and given
-		CommandOption config = builder.getConfigFileOption();
+		CommandOption<?> config = builder.getConfigFileOption();
 
 		// create copy of builder to override defaults if needed
 		CommandBuilder defaults = new CommandBuilder(builder.get());
@@ -106,11 +106,18 @@ public class CommandLineParser {
 		}
 
 		// add default options if any
-		for (CommandOption option : defaults.get()) {
+		for (CommandOption<?> option : defaults.get()) {
 
 			if (!(option instanceof ConfigFileOption) &&
 				!out.containsKey(option.getSetting())) {
 				out.put(option.getSetting(), option.getDefault());
+			}
+		}
+
+		// check if required options are present
+		for (CommandOption<?> option : builder.options) {
+			if (option.isRequired() &&  out.get(option.getSetting()) == null) {
+				throw new CommandLineException("Missing required: " + option.toCommandString());
 			}
 		}
 
@@ -132,7 +139,7 @@ public class CommandLineParser {
 	 * @param argument to extract setting from
 	 * @return name, value pair (name = setting name)
 	 */
-	private CommandOption findOption(String argument) {
+	private CommandOption<?> findOption(String argument) {
 
 		if ("--".equals(argument) || argument == null) {
 			return null;
@@ -147,7 +154,7 @@ public class CommandLineParser {
 		}
 
 		// ok find short or long
-		CommandOption found = builder.findShort(argument);
+		CommandOption<?> found = builder.findShort(argument);
 		if (found == null) {
 			found = builder.findLong(argument);
 		}
