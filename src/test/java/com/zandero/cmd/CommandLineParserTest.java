@@ -193,9 +193,9 @@ public class CommandLineParserTest {
     }
 
     @Test
-    public void missingRequiredOption() throws CommandLineException {
+    public void missingRequiredOption() {
 
-        CommandOption<Boolean> option = new BoolOption("a")
+        CommandOption<String> option = new StringOption("a")
                                             .longCommand("all")
                                             .required()
                                             .setting("ALL");
@@ -205,6 +205,7 @@ public class CommandLineParserTest {
 
 		CommandLineParser parser = new CommandLineParser(builder);
 
-		//assertThrows(CommandLineException.class, parser.parse(null));
+        CommandLineException e = assertThrows(CommandLineException.class, () -> parser.parse(null));
+        assertEquals("Missing required: -a [ --all ]", e.getMessage());
     }
 }

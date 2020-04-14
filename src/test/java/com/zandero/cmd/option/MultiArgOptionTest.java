@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -26,9 +25,9 @@ public class MultiArgOptionTest {
         option.defaultsTo(defaults);
 
         Object compare = option.getDefault();
-        assertTrue(compare instanceof List);
-        List<String> items = (List<String>) compare;
+        assertNotNull(compare);
 
+        List<String> items = (List<String>) compare;
         assertEquals(3, items.size());
         assertEquals("a", items.get(0));
         assertEquals("b", items.get(1));
